@@ -1,0 +1,25 @@
+{
+    "name": "boxtal/boxtal-php",
+    "description": "PHP Library for Boxtal API",
+    "homepage": "https://github.com/boxtal/boxtal-php",
+    "keywords": ["envoimoinscher", "boxtal", "boxtale", "php", "emc", "class", "api", "library"],
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "API Boxtal",
+            "email": "api@boxtal.com"
+        }
+    ],
+    "type": "project",
+    "require": {
+		"php": ">=5.4"
+    },
+	"require-dev": {
+        "phpunit/phpunit": "4.8.36"
+    },
+	"autoload": {
+        "psr-4": {
+            "Boxtal\\BoxtalPhp\\": "src"
+        }
+    }
+}
