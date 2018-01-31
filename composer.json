@@ -1,7 +1,7 @@
 {
-    "name": "boxtal/boxtal-php",
+    "name": "boxtal/boxtal-php-poc",
     "description": "PHP Library for Boxtal API",
-    "homepage": "https://github.com/boxtal/boxtal-php",
+    "homepage": "https://github.com/boxtal/boxtal-php-poc",
     "keywords": ["envoimoinscher", "boxtal", "boxtale", "php", "emc", "class", "api", "library"],
     "license": "GPL-3.0+",
     "authors": [
@@ -19,7 +19,7 @@
     },
 	"autoload": {
         "psr-4": {
-            "Boxtal\\BoxtalPhp\\": "src"
+            "Boxtal\\BoxtalPhpPoc\\": "src"
         }
     }
 }

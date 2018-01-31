@@ -1,5 +1,5 @@
 <?php
-namespace Boxtal\BoxtalPhp;
+namespace Boxtal\BoxtalPhpPoc;
 
 /**
  * @author boxtal <api@boxtal.com>

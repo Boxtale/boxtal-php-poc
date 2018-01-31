@@ -1,5 +1,5 @@
 <?php
-use Boxtal\BoxtalPhp\ApiClient;
+use Boxtal\BoxtalPhpPoc\ApiClient;
 
 /**
  * @author boxtal <api@boxtal.com>
