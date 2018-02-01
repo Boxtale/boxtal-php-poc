@@ -1,5 +1,7 @@
 <?php
-use Boxtal\BoxtalPhpPoc\ApiClient;
+namespace Boxtal\Test\ApiClientTest;
+
+use Boxtal\BoxtalPhp\ApiClient;
 
 /**
  * @author boxtal <api@boxtal.com>
@@ -12,5 +14,4 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         $client = new ApiClient;
         $this->assertTrue($client->request() === 'hello world');
     }
-
 }
