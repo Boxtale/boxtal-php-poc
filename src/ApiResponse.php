@@ -19,21 +19,25 @@ namespace Boxtal\BoxtalPhp;
  */
 
 /**
- * Class ApiClient
+ * Class ApiResponse
  * @package Boxtal\BoxtalPhp
  *
- *  Facilitates Boxtal API calls.
+ *  Api Response.
  */
-class ApiClient
+class ApiResponse
 {
 
-    /**
-     * API request
-     *
-     * @return string
-     */
-    public function request()
+    public $status;
+    public $response;
+
+    public function __construct($status, $response)
     {
-        return 'hello world';
+        $this->status = $status;
+        $this->response = $response;
+    }
+
+    public function isError()
+    {
+        return 0 !== strpos($this->status, '2');
     }
 }
