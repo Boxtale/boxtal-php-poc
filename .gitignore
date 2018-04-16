@@ -2,3 +2,5 @@ vendor/
 composer.lock
 .idea/
 clover.xml
+boxtal-php-poc.iml
+coverage.clover

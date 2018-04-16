@@ -10,7 +10,7 @@
             "email": "api@boxtal.com"
         }
     ],
-    "type": "project",
+    "type": "library",
     "require": {
 		"php": ">=5.4"
     },
