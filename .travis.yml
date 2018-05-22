@@ -16,7 +16,7 @@ before_script:
   - composer install --prefer-source --no-interaction --dev
 
 script:
-  - bash test/bin/phpunit.sh
+  - phpunit -c phpunit.xml -v --debug
   - bash test/bin/phpcs.sh
 
 after_script:
