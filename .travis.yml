@@ -7,11 +7,11 @@ matrix:
     dist: precise
   - php: 5.6
   - php: 7.0
-  - php: 7.2.1
+  - php: 7.2
     env: RUN_PHPCS=1 RUN_CODE_COVERAGE=1
 
 before_script:
-  - bash test/bin/travis.sh before
+  - bash test/bin/travis.sh
   - composer self-update
   - composer install --prefer-source --no-interaction --dev
 
@@ -20,4 +20,6 @@ script:
   - bash test/bin/phpcs.sh
 
 after_script:
-  - bash tests/bin/travis.sh after
+  - if [[ $RUN_CODE_COVERAGE == 1 ]]; then wget https://github.com/php-coveralls/php-coveralls/releases/download/v2.0.0/php-coveralls.phar; fi
+  - if [[ $RUN_CODE_COVERAGE == 1 ]]; then chmod +x php-coveralls.phar; fi
+  - if [[ $RUN_CODE_COVERAGE == 1 ]]; then php php-coveralls.phar -x /tmp/coverage.xml --verbose; fi
