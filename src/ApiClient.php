@@ -28,12 +28,21 @@ class ApiClient
 {
 
     /**
-     * API request
+     * Public key.
      *
-     * @return string
+     * @var RestClient
      */
-    public function request()
+    public $restClient;
+
+    /**
+     * Construct function.
+     *
+     * @param string $accessKey access key.
+     * @param string $secretKey secret key.
+     * @void
+     */
+    public function __construct($accessKey, $secretKey)
     {
-        return 'hello world';
+        $this->restClient = new RestClient($accessKey, $secretKey);
     }
 }

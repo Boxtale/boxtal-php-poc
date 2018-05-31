@@ -26,11 +26,39 @@ namespace Boxtal\BoxtalPhp;
  */
 class RestClient
 {
+
+    /**
+     * Access key.
+     *
+     * @var string
+     */
+    private $accessKey;
+
+    /**
+     * Secret key.
+     *
+     * @var string
+     */
+    private $secretKey;
+
     public static $GET = 'GET';
     public static $POST = 'POST';
     public static $PUT = 'PUT';
     public static $PATCH = 'PATCH';
     public static $DELETE = 'DELETE';
+
+    /**
+     * Construct function.
+     *
+     * @param string $accessKey access key.
+     * @param string $secretKey secret key.
+     * @void
+     */
+    public function __construct($accessKey, $secretKey)
+    {
+        $this->accessKey = $accessKey;
+        $this->secretKey = $secretKey;
+    }
 
     /**
      * API request
@@ -43,6 +71,8 @@ class RestClient
      */
     public function request($method, $url, $params = array(), $headers = array())
     {
+
+        $headers['Authorization'] = base64_encode($this->accessKey . ':' . $this->secretKey);
 
         $header = '';
         foreach ($headers as $key => $value) {

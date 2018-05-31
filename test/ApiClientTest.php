@@ -11,7 +11,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 
     public function testMethod1()
     {
-        $client = new ApiClient;
-        $this->assertTrue($client->request() === 'hello world');
+        $client = new ApiClient('accessKey', 'secretKey');
+        $this->assertTrue(get_class($client->restClient) === 'Boxtal\BoxtalPhp\RestClient');
     }
 }
