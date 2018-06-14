@@ -79,8 +79,8 @@ class RestClient
             $header .= $key . ': ' . $value ."\r\n";
         }
 
-        $opts = array('http' =>
-            array(
+        $opts = array(
+            'http' => array(
                 'method'  => $method,
                 'header'  => $header,
                 'content' => $method !== $this::$GET ? json_encode($params) : null
@@ -90,7 +90,7 @@ class RestClient
         $context = stream_context_create($opts);
 
         if ($method === $this::$GET) {
-            if (-1 === strpos($url, '?')) {
+            if (false === strpos($url, '?')) {
                 $url .= '?';
             } else {
                 $url .= '&';
