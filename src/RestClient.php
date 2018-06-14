@@ -112,9 +112,9 @@ class RestClient
         $data = stream_get_meta_data($stream);
         $wrapperLines = $data['wrapper_data'];
         $matches = array();
-        for ($i = count($wrapperLines); $i >= 0; $i--) {
-            if (0 === strpos($wrapperLines[$i], 'HTTP/1')) {
-                preg_match('/(\d{3})/', $wrapperLines[$i], $matches);
+        for ($i = count($wrapperLines); $i >= 1; $i--) {
+            if (0 === strpos($wrapperLines[$i - 1], 'HTTP/1')) {
+                preg_match('/(\d{3})/', $wrapperLines[$i - 1], $matches);
                 break;
             }
         }
