@@ -67,9 +67,10 @@ class RestClient
      * @param string $url url for the request.
      * @param array $params array of params.
      * @param array $headers array of headers.
+     * @param int $timeout timeout in seconds.
      * @return ApiResponse
      */
-    public function request($method, $url, $params = array(), $headers = array())
+    public function request($method, $url, $params = array(), $headers = array(), $timeout = null)
     {
 
         $headers['Authorization'] = base64_encode($this->accessKey . ':' . $this->secretKey);
@@ -86,6 +87,10 @@ class RestClient
                 'content' => $method !== $this::$GET ? json_encode($params) : null
             )
         );
+
+        if ($timeout !== null) {
+            $opts['http']['timeout'] = $timeout;
+        }
 
         $context = stream_context_create($opts);
 
