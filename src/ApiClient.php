@@ -1,6 +1,4 @@
 <?php
-namespace Boxtal\BoxtalPhp;
-
 /**
  * @author boxtal <api@boxtal.com>
  * @copyright 2018 Boxtal
@@ -17,6 +15,7 @@ namespace Boxtal\BoxtalPhp;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+namespace Boxtal\BoxtalPhp;
 
 /**
  * Class ApiClient
@@ -44,5 +43,17 @@ class ApiClient
     public function __construct($accessKey, $secretKey)
     {
         $this->restClient = new RestClient($accessKey, $secretKey);
+    }
+
+    /**
+     * Get api url.
+     *
+     * @return string
+     */
+    public function getApiUrl()
+    {
+        $content = file_get_contents(__DIR__ . '/config.json');
+        $config = json_decode($content);
+        return $config->apiUrl;
     }
 }
