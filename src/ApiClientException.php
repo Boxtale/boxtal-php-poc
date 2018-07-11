@@ -26,10 +26,11 @@ use Exception;
  *
  *  Api client exception.
  */
-class ApiClientException extends Exception {
+class ApiClientException extends Exception
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('Request to Boxtal API failed', 'bad_request');
     }
-
 }

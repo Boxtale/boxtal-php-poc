@@ -101,17 +101,29 @@ class RestClient
                 $url .= '&';
             }
             $url .= http_build_query($params);
+            $url = preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', $url);
         }
 
         $stream = fopen($url, 'r', false, $context);
 
-        $return = new ApiResponse($this->getStreamStatus($stream), stream_get_contents($stream));
+        if ($this->isJsonContentType($http_response_header)) {
+            $response = json_decode(stream_get_contents($stream));
+        } else {
+            $response = stream_get_contents($stream);
+        }
+
+        $return = new ApiResponse($this->getStreamStatus($stream), $response);
 
         fclose($stream);
 
         return $return;
     }
 
+    /**
+     * Get stream status
+     *
+     * @return string
+     */
     private function getStreamStatus($stream)
     {
         $data = stream_get_meta_data($stream);
@@ -124,5 +136,22 @@ class RestClient
             }
         }
         return empty($matches) ? null : $matches[1];
+    }
+
+    /**
+     * Check if content type is json
+     *
+     * @param array string response headers
+     * @return boolean
+     */
+    private function isJsonContentType($httpResponseHeaders)
+    {
+        $return = false;
+        foreach ($httpResponseHeaders as $header) {
+            if (-1 !== strpos('Content-Type: application/json', $header)) {
+                $return = true;
+            }
+        }
+        return $return;
     }
 }

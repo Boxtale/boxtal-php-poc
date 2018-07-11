@@ -56,4 +56,30 @@ class ApiClient
         $config = json_decode($content);
         return $config->apiUrl;
     }
+
+    /**
+     * Get parcel points around a given address.
+     *
+     * @param array address fields
+     * (ex: array('street' => '4 boulevard des Capucines', 'postcode' => '75009', 'city' => 'Paris', 'country' => 'FR'))
+     * @param array operator codes (ex: ['MONR', 'SOGP'])
+     * @return ApiResponse
+     */
+    public function getParcelPoints($address, $operators = [])
+    {
+        $params = array(
+            'operators' => $operators,
+            'postcode' => $address['postcode'],
+            'country' => $address['country']
+        );
+        if (isset($address['street'])) {
+            $params['street'] = $address['street'];
+        }
+
+        if (isset($address['city'])) {
+            $params['city'] = $address['city'];
+        }
+
+        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/public/parcel-point', $params);
+    }
 }
