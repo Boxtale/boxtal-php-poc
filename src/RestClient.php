@@ -74,6 +74,7 @@ class RestClient
     {
 
         $headers['Authorization'] = base64_encode($this->accessKey . ':' . $this->secretKey);
+        $headers['Content-type'] = 'application/json; charset=UTF-8';
 
         $header = '';
         foreach ($headers as $key => $value) {
@@ -104,17 +105,21 @@ class RestClient
             $url = preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', $url);
         }
 
-        $stream = fopen($url, 'r', false, $context);
+        $stream = @fopen($url, 'r', false, $context);
 
-        if ($this->isJsonContentType($http_response_header)) {
-            $response = json_decode(stream_get_contents($stream));
+        if (false === $stream) {
+            $return = new ApiResponse(400, null);
         } else {
-            $response = stream_get_contents($stream);
+            if ($this->isJsonContentType($http_response_header)) {
+                $response = json_decode(stream_get_contents($stream));
+            } else {
+                $response = stream_get_contents($stream);
+            }
+
+            $return = new ApiResponse($this->getStreamStatus($stream), $response);
+
+            fclose($stream);
         }
-
-        $return = new ApiResponse($this->getStreamStatus($stream), $response);
-
-        fclose($stream);
 
         return $return;
     }
@@ -144,8 +149,7 @@ class RestClient
      * @param array string response headers
      * @return boolean
      */
-    private function isJsonContentType($httpResponseHeaders)
-    {
+    private function isJsonContentType($httpResponseHeaders) {
         $return = false;
         foreach ($httpResponseHeaders as $header) {
             if (-1 !== strpos('Content-Type: application/json', $header)) {
