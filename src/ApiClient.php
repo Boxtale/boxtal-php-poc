@@ -60,8 +60,7 @@ class ApiClient
     /**
      * Get parcel points around a given address.
      *
-     * @param array address fields
-     * (ex: array('street' => '4 boulevard des Capucines', 'postcode' => '75009', 'city' => 'Paris', 'country' => 'FR'))
+     * @param array address fields (ex: array('street' => '4 boulevard des Capucines', 'postcode' => '75009', 'city' => 'Paris', 'country' => 'FR'))
      * @param array operator codes (ex: ['MONR', 'SOGP'])
      * @return ApiResponse
      */
@@ -81,5 +80,16 @@ class ApiClient
         }
 
         return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/public/parcel-point', $params);
+    }
+
+    /**
+     * Get tracking given a shipment reference.
+     *
+     * @param String shipment reference
+     * @return ApiResponse
+     */
+    public function getTracking($reference)
+    {
+        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/public/tracking/' . $reference);
     }
 }
