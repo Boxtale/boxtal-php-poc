@@ -79,7 +79,7 @@ class ApiClient
             $params['city'] = $address['city'];
         }
 
-        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/public/parcel-point', $params);
+        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2/parcel-point', $params);
     }
 
     /**
