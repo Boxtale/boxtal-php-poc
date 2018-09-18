@@ -90,6 +90,6 @@ class ApiClient
      */
     public function getOrderTracking($reference)
     {
-        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2/order/'.$reference.'/tracking');
+        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2/shop-order/'.$reference);
     }
 }
