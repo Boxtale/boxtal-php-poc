@@ -95,7 +95,7 @@ class RestClient
 
         $context = stream_context_create($opts);
 
-        if ($method === $this::$GET) {
+        if ($method === $this::$GET && !empty($params)) {
             if (false === strpos($url, '?')) {
                 $url .= '?';
             } else {
