@@ -83,12 +83,12 @@ class ApiClient
     }
 
     /**
-     * Get tracking of a given order.
+     * Get order.
      *
      * @param String order reference
      * @return ApiResponse
      */
-    public function getOrderTracking($reference)
+    public function getOrder($reference)
     {
         return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2/shop-order/'.$reference);
     }
