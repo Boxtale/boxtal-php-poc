@@ -61,13 +61,13 @@ class ApiClient
      * Get parcel points around a given address.
      *
      * @param array address fields (ex: array('street' => '4 boulevard des Capucines', 'postcode' => '75009', 'city' => 'Paris', 'country' => 'FR'))
-     * @param array operator codes (ex: ['MONR', 'SOGP'])
+     * @param array parcel point networks (ex: ['MONR_NETWORK', 'SOGP_NETWORK'])
      * @return ApiResponse
      */
-    public function getParcelPoints($address, $operators = [])
+    public function getParcelPoints($address, $networks = [])
     {
         $params = array(
-            'operators' => $operators,
+            'networks' => $networks,
             'postcode' => $address['postcode'],
             'country' => $address['country']
         );
