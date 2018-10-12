@@ -79,7 +79,7 @@ class ApiClient
             $params['city'] = $address['city'];
         }
 
-        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2/parcel-point', $params);
+        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2beta1/parcel-point', $params);
     }
 
     /**
@@ -90,6 +90,6 @@ class ApiClient
      */
     public function getOrder($reference)
     {
-        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2/shop-order/'.$reference);
+        return $this->restClient->request(RestClient::$GET, $this->getApiUrl() . '/v2beta1/shop-order/'.$reference);
     }
 }
