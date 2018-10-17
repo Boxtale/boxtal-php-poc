@@ -68,7 +68,7 @@ class ApiClient
     {
         $params = array(
             'networks' => $networks,
-            'postcode' => $address['postcode'],
+            'zipCode' => $address['zipCode'],
             'country' => $address['country']
         );
         if (isset($address['street'])) {
