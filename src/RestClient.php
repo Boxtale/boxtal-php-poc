@@ -73,7 +73,7 @@ class RestClient
     public function request($method, $url, $params = array(), $headers = array(), $timeout = null)
     {
 
-        $headers['Authorization'] = base64_encode($this->accessKey . ':' . $this->secretKey);
+        $headers['Authorization'] = 'Basic '.base64_encode($this->accessKey . ':' . $this->secretKey);
         $headers['Content-type'] = 'application/json; charset=UTF-8';
 
         $header = '';
