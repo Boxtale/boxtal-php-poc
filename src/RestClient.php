@@ -149,7 +149,8 @@ class RestClient
      * @param array string response headers
      * @return boolean
      */
-    private function isJsonContentType($httpResponseHeaders) {
+    private function isJsonContentType($httpResponseHeaders)
+    {
         $return = false;
         foreach ($httpResponseHeaders as $header) {
             if (-1 !== strpos('Content-Type: application/json', $header)) {

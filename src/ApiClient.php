@@ -60,7 +60,8 @@ class ApiClient
     /**
      * Get parcel points around a given address.
      *
-     * @param array address fields (ex: array('street' => '4 boulevard des Capucines', 'postcode' => '75009', 'city' => 'Paris', 'country' => 'FR'))
+     * @param array address fields
+     * ex : array('street' => '4 boulevard...', 'postcode' => '75009', 'city' => 'Paris', 'country' => 'FR'))
      * @param array parcel point networks (ex: ['MONR_NETWORK', 'SOGP_NETWORK'])
      * @return ApiResponse
      */
