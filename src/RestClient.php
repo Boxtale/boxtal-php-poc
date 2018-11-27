@@ -61,6 +61,37 @@ class RestClient
     }
 
     /**
+     * Healthcheck
+     *
+     * @return boolean
+     */
+    public static function healthcheck()
+    {
+        return self::fopenHealthcheck() || self::curlHealthcheck();
+    }
+
+    /**
+     * fopen healthcheck
+     *
+     * @return boolean
+     */
+    private static function fopenHealthcheck()
+    {
+        $ini = ini_get('allow_url_fopen');
+        return '' !== $ini && false !== $ini;
+    }
+
+    /**
+     * curl healthcheck
+     *
+     * @return boolean
+     */
+    private static function curlHealthcheck()
+    {
+        return extension_loaded('curl');
+    }
+
+    /**
      * API request
      *
      * @param string $method one of GET, POST, PUT, PATCH, DELETE.
@@ -73,27 +104,8 @@ class RestClient
     public function request($method, $url, $params = array(), $headers = array(), $timeout = null)
     {
 
-        $headers['Authorization'] = 'Basic '.base64_encode($this->accessKey . ':' . $this->secretKey);
+        $headers['Authorization'] = base64_encode($this->accessKey . ':' . $this->secretKey);
         $headers['Content-type'] = 'application/json; charset=UTF-8';
-
-        $header = '';
-        foreach ($headers as $key => $value) {
-            $header .= $key . ': ' . $value ."\r\n";
-        }
-
-        $opts = array(
-            'http' => array(
-                'method'  => $method,
-                'header'  => $header,
-                'content' => $method !== $this::$GET ? json_encode($params) : null
-            )
-        );
-
-        if ($timeout !== null) {
-            $opts['http']['timeout'] = $timeout;
-        }
-
-        $context = stream_context_create($opts);
 
         if ($method === $this::$GET && !empty($params)) {
             if (false === strpos($url, '?')) {
@@ -105,23 +117,85 @@ class RestClient
             $url = preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', $url);
         }
 
-        $stream = @fopen($url, 'r', false, $context);
-
-        if (false === $stream) {
-            $return = new ApiResponse(400, null);
-        } else {
-            if ($this->isJsonContentType($http_response_header)) {
-                $response = json_decode(stream_get_contents($stream));
-            } else {
-                $response = stream_get_contents($stream);
+        if (self::fopenHealthcheck()) {
+            $header = '';
+            foreach ($headers as $key => $value) {
+                $header .= $key . ': ' . $value ."\r\n";
             }
 
-            $return = new ApiResponse($this->getStreamStatus($stream), $response);
+            $opts = array(
+                'http' => array(
+                    'method'  => $method,
+                    'header'  => $header,
+                    'content' => $method !== $this::$GET ? json_encode($params) : null
+                )
+            );
 
-            fclose($stream);
+            if ($timeout !== null) {
+                $opts['http']['timeout'] = $timeout;
+            }
+
+            $context = stream_context_create($opts);
+
+            $stream = fopen($url, 'r', false, $context);
+
+            if (false === $stream) {
+                $return = new ApiResponse(400, null);
+            } else {
+                if ($this->isFopenResponseContentTypeJson($http_response_header)) {
+                    $response = json_decode(stream_get_contents($stream));
+                } else {
+                    $response = stream_get_contents($stream);
+                }
+
+                $return = new ApiResponse($this->getStreamStatus($stream), $response);
+
+                fclose($stream);
+            }
+
+            return $return;
+        } elseif (self::curlHealthcheck()) {
+            $curl = curl_init();
+
+            $opts = array(
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_URL => $url
+            );
+
+            if (strpos($url, 'https') !== 0) {
+                $opts[CURLOPT_SSL_VERIFYPEER] = false;
+                $opts[CURLOPT_SSL_VERIFYHOST] = 0;
+            } else {
+                $opts[CURLOPT_SSL_VERIFYPEER] = true;
+                $opts[CURLOPT_SSL_VERIFYHOST] = 2;
+            }
+
+            $headerArray = array();
+            foreach ($headers as $key => $value) {
+                $headerArray[] = $key . ': ' . $value;
+            }
+            $opts[CURLOPT_HTTPHEADER] = $headerArray;
+
+            if ($method === $this::$POST) {
+                $opts[CURLOPT_POST] = 1;
+                if (!empty($params)) {
+                    $opts[CURLOPT_POSTFIELDS] = $params;
+                }
+            }
+
+            curl_setopt_array($curl, $opts);
+            $result = curl_exec($curl);
+
+            if (false === $result) {
+                $return = new ApiResponse(400, null);
+            } else {
+                $response = $this->isCurlResponseContentTypeJson($curl) ? json_decode($result) : $result;
+                $return = new ApiResponse($this->getCurlResponseStatus($curl), $response);
+            }
+
+            return $return;
         }
-
-        return $return;
+        return new ApiResponse(500, null);
     }
 
     /**
@@ -144,12 +218,12 @@ class RestClient
     }
 
     /**
-     * Check if content type is json
+     * Check if fopen response content type is json
      *
      * @param array string response headers
      * @return boolean
      */
-    private function isJsonContentType($httpResponseHeaders)
+    private function isFopenResponseContentTypeJson($httpResponseHeaders)
     {
         $return = false;
         foreach ($httpResponseHeaders as $header) {
@@ -158,5 +232,39 @@ class RestClient
             }
         }
         return $return;
+    }
+
+    /**
+     * Check if curl response content type is json
+     *
+     * @param curl request
+     * @return boolean
+     */
+    private function isCurlResponseContentTypeJson($curl)
+    {
+
+        $curlInfo = curl_getinfo($curl);
+        $contentType = explode(';', $curlInfo['content_type']);
+
+        $return = false;
+        foreach ($contentType as $type) {
+            if (-1 !== strpos('application/json', $type)) {
+                $return = true;
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * Get curl response status code
+     *
+     * @param curl request
+     * @return boolean
+     */
+    private function getCurlResponseStatus($curl)
+    {
+
+        $curlInfo = curl_getinfo($curl);
+        return $curlInfo['http_code'];
     }
 }
