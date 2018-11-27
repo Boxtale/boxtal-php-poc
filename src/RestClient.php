@@ -176,10 +176,10 @@ class RestClient
             }
             $opts[CURLOPT_HTTPHEADER] = $headerArray;
 
-            if ($method === $this::$POST) {
-                $opts[CURLOPT_POST] = 1;
+            if ($method !== $this::$GET) {
+                $opts[CURLOPT_CUSTOMREQUEST] = $method;
                 if (!empty($params)) {
-                    $opts[CURLOPT_POSTFIELDS] = $params;
+                    $opts[CURLOPT_POSTFIELDS] = json_encode($params);
                 }
             }
 
