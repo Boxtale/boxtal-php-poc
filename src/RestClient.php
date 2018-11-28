@@ -78,7 +78,7 @@ class RestClient
     private static function fopenHealthcheck()
     {
         $ini = ini_get('allow_url_fopen');
-        return '' !== $ini && false !== $ini;
+        return '' !== $ini && false !== $ini && '0' !== $ini && 0 !== $ini;
     }
 
     /**
@@ -137,7 +137,7 @@ class RestClient
 
             $context = stream_context_create($opts);
 
-            $stream = @fopen($url, 'r', false, $context);
+            $stream = fopen($url, 'r', false, $context);
 
             if (false === $stream) {
                 $return = new ApiResponse(400, null);
