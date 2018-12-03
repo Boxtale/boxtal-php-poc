@@ -137,7 +137,7 @@ class RestClient
 
             $context = stream_context_create($opts);
 
-            $stream = fopen($url, 'r', false, $context);
+            $stream = @fopen($url, 'r', false, $context);
 
             if (false === $stream) {
                 $return = new ApiResponse(400, null);
